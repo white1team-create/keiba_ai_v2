@@ -1,10 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import time
 
 # =========================
-# 1レース取得（テスト用）
+# 1レース取得（文字化け修正）
 # =========================
 def fetch_race(race_url):
     headers = {
@@ -12,6 +11,8 @@ def fetch_race(race_url):
     }
 
     res = requests.get(race_url, headers=headers)
+    res.encoding = "EUC-JP"   # ★ここが重要
+
     soup = BeautifulSoup(res.text, "html.parser")
 
     rows = soup.select("table.race_table_01 tr")
@@ -38,12 +39,11 @@ def fetch_race(race_url):
 # 実行テスト
 # =========================
 if __name__ == "__main__":
-    # テスト用レースURL（サンプル）
     race_url = "https://db.netkeiba.com/race/202401010101/"
 
     df = fetch_race(race_url)
 
     print(df.head())
 
-    df.to_csv("race_sample.csv", index=False)
+    df.to_csv("race_sample.csv", index=False, encoding="utf-8-sig")
     print("saved: race_sample.csv")
