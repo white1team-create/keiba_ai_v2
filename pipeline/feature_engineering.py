@@ -51,14 +51,14 @@ class FeatureEngineering:
 
 
 if __name__ == "__main__":
-    race_df = pd.read_csv("data/processed/race.csv")
-    horse_df = pd.read_csv("data/processed/horse_race.csv")
-    past_df = pd.read_csv("data/processed/past_features.csv")
-    cross_df = pd.read_csv("data/processed/cross_features.csv")
+    race_df = pd.read_csv("processed/race.csv")
+    horse_df = pd.read_csv("processed/horse_race.csv")
+    past_df = pd.read_csv("processed/past_features.csv")
+    cross_df = pd.read_csv("processed/cross_features.csv")
 
     fe = FeatureEngineering(race_df, horse_df, past_df, cross_df)
     final_df = fe.build()
 
-    final_df.to_csv("data/processed/train_dataset.csv", index=False)
+    final_df.to_csv("processed/train_dataset.csv", index=False)
 
     print("done:", final_df.shape)
