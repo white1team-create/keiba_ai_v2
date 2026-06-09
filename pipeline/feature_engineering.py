@@ -8,6 +8,19 @@ class FeatureEngineering:
         self.past_df = past_df
         self.cross_df = cross_df
 
+    # =========================
+    # レース選別（重要）
+    # =========================
+    def filter_races(self, df):
+        race_ev = df.groupby("race_id")["ev_score"].mean()
+
+        valid_races = race_ev[race_ev > 1.05].index
+
+        return df[df["race_id"].isin(valid_races)]
+
+    # =========================
+    # メイン処理
+    # =========================
     def build(self):
         df = self.horse_race_df.copy()
 
@@ -28,7 +41,10 @@ class FeatureEngineering:
             how="left"
         )
 
-        # ④ 欠損処理
+        # ④ レース選別（EVでフィルタ）
+        df = self.filter_races(df)
+
+        # ⑤ 欠損処理
         df = df.fillna(0)
 
         return df
@@ -46,21 +62,3 @@ if __name__ == "__main__":
     final_df.to_csv("data/processed/train_dataset.csv", index=False)
 
     print("done:", final_df.shape)
-
-# =========================
-# レース選別（超重要）
-# =========================
-
-def filter_races(df):
-    """
-    レース単位で期待値が低いレースを削除
-    """
-
-    race_ev = df.groupby("race_id")["ev_score"].mean()
-
-    # 期待値が低いレースを除外
-    valid_races = race_ev[race_ev > 1.05].index
-
-    df_filtered = df[df["race_id"].isin(valid_races)]
-
-    return df_filtered
