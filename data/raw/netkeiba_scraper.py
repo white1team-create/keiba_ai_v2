@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 # =========================
-# 1レース取得（文字化け修正）
+# 1レース取得（安定版）
 # =========================
 def fetch_race(race_url):
     headers = {
@@ -11,7 +11,9 @@ def fetch_race(race_url):
     }
 
     res = requests.get(race_url, headers=headers)
-    res.encoding = "EUC-JP"   # ★ここが重要
+
+    # ★ 自動判定に任せる
+    res.encoding = res.apparent_encoding
 
     soup = BeautifulSoup(res.text, "html.parser")
 
