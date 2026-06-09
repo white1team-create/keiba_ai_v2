@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 # =========================
-# 1レース取得（安定版）
+# 1レース取得（確定安定版）
 # =========================
 def fetch_race(race_url):
     headers = {
@@ -12,8 +12,8 @@ def fetch_race(race_url):
 
     res = requests.get(race_url, headers=headers)
 
-    # ★ 自動判定に任せる
-    res.encoding = res.apparent_encoding
+    # ★ netkeibaはこれが一番安定
+    res.encoding = "shift_jis"
 
     soup = BeautifulSoup(res.text, "html.parser")
 
