@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 # =========================
-# 1レース取得（確定安定版）
+# 1レース取得（完全安定版）
 # =========================
 def fetch_race(race_url):
     headers = {
@@ -12,10 +12,8 @@ def fetch_race(race_url):
 
     res = requests.get(race_url, headers=headers)
 
-    # ★ netkeibaはこれが一番安定
-    res.encoding = "shift_jis"
-
-    soup = BeautifulSoup(res.text, "html.parser")
+    # ★ encodingを一切いじらない
+    soup = BeautifulSoup(res.content, "html.parser")
 
     rows = soup.select("table.race_table_01 tr")
 
@@ -27,9 +25,9 @@ def fetch_race(race_url):
             continue
 
         horse = {
-            "rank": cols[0].text.strip(),
-            "horse_name": cols[3].text.strip(),
-            "odds": cols[9].text.strip(),
+            "rank": cols[0].get_text(strip=True),
+            "horse_name": cols[3].get_text(strip=True),
+            "odds": cols[9].get_text(strip=True),
         }
 
         data.append(horse)
