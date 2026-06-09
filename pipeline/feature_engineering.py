@@ -46,3 +46,21 @@ if __name__ == "__main__":
     final_df.to_csv("data/processed/train_dataset.csv", index=False)
 
     print("done:", final_df.shape)
+
+# =========================
+# レース選別（超重要）
+# =========================
+
+def filter_races(df):
+    """
+    レース単位で期待値が低いレースを削除
+    """
+
+    race_ev = df.groupby("race_id")["ev_score"].mean()
+
+    # 期待値が低いレースを除外
+    valid_races = race_ev[race_ev > 1.05].index
+
+    df_filtered = df[df["race_id"].isin(valid_races)]
+
+    return df_filtered
